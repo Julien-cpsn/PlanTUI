@@ -7,6 +7,13 @@ use std::path::PathBuf;
 use plantuml_parser::{PlantUmlLine, PlantUmlLineKind};
 use ratatui::prelude::{Line, Stylize};
 
+pub const DEFAULT_DIAGRAM: &str = r"@startuml
+title MyDiagram
+'comment
+
+Alice -> Bob: Hello
+@enduml";
+
 impl App {
     pub fn save_pmu_file(&mut self) -> anyhow::Result<()> {
         let diagram = &self.text_input.text;
@@ -33,7 +40,7 @@ pub fn get_input_file_path(data_dir: &PathBuf) -> anyhow::Result<PathBuf> {
     match &ARGS.input {
         None => {
             let path = data_dir.join("temp");
-            fs::remove_file(&path)?;
+            fs::remove_file(&path).ok();
             Ok(path)
         },
         Some(path) => Ok(path.clone()),

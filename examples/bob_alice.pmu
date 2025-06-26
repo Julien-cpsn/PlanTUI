@@ -1,3 +1,3 @@
 @startuml
-Bob -> Alice: Hello
+Bob -> Alice: I love PlanTUI
 @enduml

@@ -1,6 +1,6 @@
 use crate::args::ARGS;
 use crate::files::data_dir::get_data_dir;
-use crate::files::pmu::get_input_file_path;
+use crate::files::pmu::{get_input_file_path, DEFAULT_DIAGRAM};
 use crate::widgets::text_input::TextInput;
 use parking_lot::RwLock;
 use ratatui::prelude::Backend;
@@ -48,17 +48,7 @@ impl App {
 
         let text_input = match fs::exists(&input_file_path)? {
             true => fs::read_to_string(&input_file_path)?,
-            false => r"@startuml
-title MyDiagram
-/'
-many lines comments
-here
-'/
-
-Alice -> Bob: Hello
-
-'comment
-@enduml".to_string()
+            false => DEFAULT_DIAGRAM.to_string()
         };
 
         Ok(App {
