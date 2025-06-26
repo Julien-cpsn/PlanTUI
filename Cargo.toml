@@ -1,0 +1,25 @@
+[package]
+name = "plantui"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+ratatui = "0.29.0"
+ratatui-image = "8.0.1"
+
+crokey = "1.2.0"
+throbber-widgets-tui = "0.8.0"
+
+plantuml-parser = "0.6.1"
+
+tokio = { version = "1.45", features = ["rt", "rt-multi-thread", "macros"] }
+tokio-util = "0.7.15"
+async-process = "2.3.1"
+parking_lot = { version = "0.12.4", features = ["send_guard"] }
+
+clap = { version = "4.5", features = ["derive"] }
+directories = "6.0.0"
+anyhow = "1.0"
+once_cell = "1.21.3"
+image = { version = "0.25.6", features = ["png"] }
+arboard = { version = "3.5.0", features = ["wayland-data-control", "wl-clipboard-rs"] }

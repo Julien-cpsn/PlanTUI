@@ -1,0 +1,121 @@
+@startuml
+!define CiscoPuml https://raw.githubusercontent.com/Julien-cpsn/plantuml-cisco-icons/master
+!include CiscoPuml/Icons/all.puml
+!define CISCO_COLOR #006d99
+
+skinparam linetype polyline
+skinparam linetype ortho
+
+cloud "Grid'5000 network" as grid5k #5500ff20;line:MediumSlateBlue;text:MediumSlateBlue
+cloud "CorteXlab network" as cortexlab #00ff9930;line:Teal;text:Teal
+
+label "<$router,scale=0.65,color=CISCO_COLOR>\nRouter 1" as router1
+label "<$router,scale=0.65,color=CISCO_COLOR>\nRouter 2" as router2
+label "<$router,scale=0.65,color=CISCO_COLOR>\nRouter 3" as router3
+label "<$router,scale=0.65,color=CISCO_COLOR>\nRouter 4" as router4
+
+label "<$router,scale=0.65,color=CISCO_COLOR>\nRouter 5" as router5
+label "<$router,scale=0.65,color=CISCO_COLOR>\nRouter 6" as router6
+label "<$router,scale=0.65,color=CISCO_COLOR>\nRouter 7" as router7
+label "<$router,scale=0.65,color=CISCO_COLOR>\nRouter 8" as router8
+
+label "<$router,scale=0.65,color=CISCO_COLOR>\nRouter 9" as router9
+label "<$router,scale=0.65,color=CISCO_COLOR>\nRouter 10" as router10
+label "<$router,scale=0.65,color=CISCO_COLOR>\nRouter 11" as router11
+label "<$router,scale=0.65,color=CISCO_COLOR>\nRouter 12" as router12
+
+label "<$router,scale=0.65,color=CISCO_COLOR>\nRouter 13" as router13
+label "<$router,scale=0.65,color=CISCO_COLOR>\nRouter 14" as router14
+label "<$router,scale=0.65,color=CISCO_COLOR>\nRouter 15" as router15
+label "<$router,scale=0.65,color=CISCO_COLOR>\nRouter 16" as router16
+
+label "       <$layer_3_switch,scale=0.65,color=CISCO_COLOR>\nL2/L3 Switch 1" as switch1
+label "       <$layer_3_switch,scale=0.65,color=CISCO_COLOR>\nL2/L3 Switch 2" as switch2
+label "       <$layer_3_switch,scale=0.65,color=CISCO_COLOR>\nL2/L3 Switch 3" as switch3
+label "       <$layer_3_switch,scale=0.65,color=CISCO_COLOR>\nL2/L3 Switch 4" as switch4
+
+label "<$www_server,scale=0.75,color=CISCO_COLOR>\nServer 1" as server1
+label "<$www_server,scale=0.75,color=CISCO_COLOR>\n   ..." as serverx
+label "<$www_server,scale=0.75,color=CISCO_COLOR>\nServer 10" as server10
+label "<$www_server,scale=0.75,color=CISCO_COLOR>\nServer 11" as server11
+label "<$www_server,scale=0.75,color=CISCO_COLOR>\n   ..." as serverx2
+label "<$www_server,scale=0.75,color=CISCO_COLOR>\nServer 20" as server20
+
+router1 -[#red]r- router2
+router2 -[#red]d- router3
+router3 -[#red]l- router4
+router4 -[#red]u- router1
+
+router5 -[#green]r- router6
+router6 -[#green]d- router7
+router7 -[#green]l- router8
+router8 -[#green]u- router5
+
+router9 -[#blue]r- router10
+router10 -[#blue]d- router11
+router11 -[#blue]l- router12
+router12 -[#blue]u- router9
+
+router13 -[#orange]r- router14
+router14 -[#orange]d- router15
+router15 -[#orange]l- router16
+router16 -[#orange]u- router13
+
+router3 -r- router8
+router6 -r- router9
+router11 -r- router16
+router14 -[norank]- router1
+
+switch1 -r- switch2
+switch2 -d- switch3
+switch3 -l- switch4
+switch4 -u- switch1
+switch1 -[hidden]- switch3
+switch2 -[hidden]- switch4
+
+switch4 -[#red,norank]u- router1
+switch4 -[#red,norank]u- router2
+switch4 -[#red]u-- router3
+switch4 -[#red,norank]u- router4
+
+switch1 -[#green,norank]u- router5
+switch1 -[#green,norank]u- router6
+switch1 -[#green]u-- router7
+switch1 -[#green,norank]u- router8
+
+switch2 -[#blue,norank]u- router9
+switch2 -[#blue,norank]u- router10
+switch2 -[#blue,norank]u- router11
+switch2 -[#blue]u-- router12
+
+switch3 -[#orange,norank]u- router13
+switch3 -[#orange,norank]u- router14
+switch3 -[#orange,norank]u- router15
+switch3 -[#orange]u-- router16
+
+'grid5k -[norank,dotted]- switch1
+'grid5k -[norank,dotted]- switch2
+'grid5k -[norank,dotted]- switch3
+'grid5k -[norank,dotted]- switch4
+
+'cortexlab -[norank,dotted]- switch1
+'cortexlab -[norank,dotted]- switch2
+'cortexlab -[norank,dotted]- switch3
+'cortexlab -[norank,dotted]- switch4
+
+switch4 -[hidden]d- server1
+switch4 -[hidden]d- serverx
+switch4 -[hidden]d- server10
+
+switch3 -[hidden]d- server11
+switch3 -[hidden]d- serverx2
+switch3 -[hidden]d- server20
+
+legend bottom right
+  <color:red>—</color> AS 1
+  <color:green>—</color> AS 2
+  <color:blue>—</color> AS 3
+  <color:orange>—</color> AS 4
+end legend
+
+@enduml
