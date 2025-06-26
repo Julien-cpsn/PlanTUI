@@ -2,7 +2,7 @@
 
 ![](./examples/demo.png)
 
-> [!WARN]
+> [!WARNING]
 > You must have a command called `plantuml` which points towards your plantuml compiler. Likely by creating an alias to `java -jar my_compiler`.
 
 PlantUML editor and renderer in your terminal.
