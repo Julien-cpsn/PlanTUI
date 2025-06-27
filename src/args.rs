@@ -20,9 +20,10 @@ pub const ARGS: Lazy<Args> = Lazy::new(|| {
 
 #[derive(Parser)]
 pub struct Args {
-    #[arg(short, long)]
+    /// PlantUML file to edit
     pub input: Option<PathBuf>,
-    
+
+    /// Activate light mode instead of dark mode
     #[arg(short, long, default_value_t = false)]
     pub light_mode: bool,
 }

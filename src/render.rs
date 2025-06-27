@@ -4,10 +4,22 @@ use image::ImageReader;
 use parking_lot::RwLock;
 use plantuml_parser::PlantUmlFileData;
 use ratatui_image::picker::Picker;
+use std::env;
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::time::Instant;
+use once_cell::sync::Lazy;
 use tokio_util::sync::CancellationToken;
+
+const PLANTUML_COMMAND: Lazy<String> = Lazy::new(|| {
+    let plantuml_env = env::var("PLANT_UML");
+    let plantuml_command = match plantuml_env {
+        Ok(command) if !command.is_empty() => command,
+        _ => String::from("plantuml")
+    };
+    
+    plantuml_command.trim().to_string()
+});
 
 impl App {
     pub async fn render_plantuml(&mut self) -> anyhow::Result<()> {
@@ -63,9 +75,11 @@ async fn render_plantuml_task(
         false => ""
     };
 
+
+    
     let initial_time = Instant::now();
 
-    let render_command = Command::new("plantuml")
+    let render_command = Command::new(&*PLANTUML_COMMAND)
         .args(vec![
             output_format,
             "-nbthread", "auto",

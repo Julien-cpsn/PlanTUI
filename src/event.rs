@@ -36,7 +36,10 @@ impl App {
 
             key!(alt-left) => self.shrink_left_area(),
             key!(alt-right) => self.expand_left_area(),
-            key!(ctrl-shift-D) => self.dark_mode = !self.dark_mode,
+            key!(ctrl-D) | key!(ctrl-shift-D) => {
+                self.dark_mode = !self.dark_mode;
+                should_render = true;
+            },
 
             key!(delete) => {
                 self.text_input.delete_char_forward();
