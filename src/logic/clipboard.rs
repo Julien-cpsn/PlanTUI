@@ -3,7 +3,7 @@ use arboard::{Clipboard, ImageData};
 use image::EncodableLayout;
 use std::fs;
 
-impl App {
+impl App<'_> {
     pub fn copy_to_clipboard(&self) -> anyhow::Result<()> {
         let mut clipboard = Clipboard::new()?;
 

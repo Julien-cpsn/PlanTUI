@@ -7,7 +7,7 @@ use std::time::Duration;
 
 const TICK_RATE: Duration = Duration::from_millis(200);
 
-impl App {
+impl App<'_> {
     pub async fn handle_events(&mut self) -> anyhow::Result<()> {
         if event::poll(TICK_RATE)? {
             if let Ok(event) = event::read() {

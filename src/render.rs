@@ -21,7 +21,7 @@ const PLANTUML_COMMAND: Lazy<String> = Lazy::new(|| {
     plantuml_command.trim().to_string()
 });
 
-impl App {
+impl App<'_> {
     pub async fn render_plantuml(&mut self) -> anyhow::Result<()> {
         if self.render_output.write().pending {
             self.cancellation_token.cancel();

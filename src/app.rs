@@ -1,6 +1,6 @@
 use crate::args::ARGS;
 use crate::files::data_dir::get_data_dir;
-use crate::files::pmu::{get_input_file_path, DEFAULT_DIAGRAM};
+use crate::files::pmu::{get_input_file_path, pmu_to_paragraph, DEFAULT_DIAGRAM};
 use crate::widgets::text_input::TextInput;
 use parking_lot::RwLock;
 use ratatui::prelude::Backend;
@@ -15,7 +15,7 @@ use tokio_util::sync::CancellationToken;
 
 pub const APP_NAME: &str = "PlanTUI";
 
-pub struct App {
+pub struct App<'a> {
     pub should_quit: bool,
     pub data_dir: PathBuf,
 
@@ -24,7 +24,7 @@ pub struct App {
 
     // Input
     pub input_file_path: PathBuf,
-    pub text_input: TextInput,
+    pub text_input: TextInput<'a>,
 
     // Output
     pub render_output: Arc<RwLock<RenderOutput>>,
@@ -41,8 +41,8 @@ pub struct RenderOutput {
     pub time: String,
 }
 
-impl App {
-    pub fn new() -> anyhow::Result<App> {
+impl<'a> App<'a> {
+    pub fn new() -> anyhow::Result<App<'a>> {
         let data_dir = get_data_dir();
         let input_file_path = get_input_file_path(&data_dir)?;
 
@@ -60,6 +60,7 @@ impl App {
             text_input: TextInput {
                 text: text_input,
                 cursor_position: (0, 0),
+                render_fn: Box::new(pmu_to_paragraph),
             },
             render_output: Arc::new(RwLock::new(RenderOutput {
                 pending: false,

@@ -6,6 +6,7 @@ use std::io::Write;
 use std::path::PathBuf;
 use plantuml_parser::{PlantUmlLine, PlantUmlLineKind};
 use ratatui::prelude::{Line, Stylize};
+use ratatui::widgets::Paragraph;
 
 pub const DEFAULT_DIAGRAM: &str = r"@startuml
 title MyDiagram
@@ -14,7 +15,7 @@ title MyDiagram
 Alice -> Bob: Hello
 @enduml";
 
-impl App {
+impl App<'_> {
     pub fn save_pmu_file(&mut self) -> anyhow::Result<()> {
         let diagram = &self.text_input.text;
         let temp_path = self.input_file_path.with_extension("~");
@@ -47,7 +48,12 @@ pub fn get_input_file_path(data_dir: &PathBuf) -> anyhow::Result<PathBuf> {
     }
 }
 
-pub fn syntax_highlighting(input: &str) -> Vec<Line> {
+pub fn pmu_to_paragraph<'a>(text: &str) -> Paragraph<'a> {
+    let lines = syntax_highlighting(text);
+    Paragraph::new(lines)
+}
+
+fn syntax_highlighting<'a>(input: &str) -> Vec<Line<'a>> {
     let mut lines = vec![];
     let mut in_comment_block = false;
 

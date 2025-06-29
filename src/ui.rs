@@ -1,13 +1,12 @@
 use crate::app::{App, APP_NAME};
-use crate::files::pmu::syntax_highlighting;
-use ratatui::prelude::{Constraint, Layout, Line, Position, Rect, Span, Stylize};
+use ratatui::prelude::{Constraint, Layout, Line, Rect, Span, Stylize};
 use ratatui::widgets::{Block, Borders, Paragraph, Wrap};
 use ratatui::Frame;
 use ratatui_image::StatefulImage;
 use std::fs;
 use throbber_widgets_tui::{Throbber, WhichUse, BRAILLE_DOUBLE};
 
-impl App {
+impl App<'_> {
     pub fn ui(&mut self, frame: &mut Frame) {
         let [title_area, main_area] = Layout::vertical(vec![
             Constraint::Length(1),
@@ -39,15 +38,21 @@ impl App {
             Constraint::Percentage(100-self.left_area_percentage),
         ])
             .areas(area);
-
-        let lines = syntax_highlighting(&self.text_input.text);
-        let input_par = Paragraph::new(lines);
-        frame.render_widget(input_par, text_area);
-
-        frame.set_cursor_position(Position::new(
-            text_area.x + self.text_input.cursor_position.1 as u16,
-            text_area.y + self.text_input.cursor_position.0 as u16
+        
+        let mut text_input_par = (self.text_input.render_fn)(&self.text_input.text);
+        let (vertical_offset, horizontal_offset) = self.text_input.calculate_scroll_offset(text_area.height, text_area.width);
+        let cursor_position = self.text_input.get_cursor_screen_position(text_area, vertical_offset, horizontal_offset);
+        
+        text_input_par = text_input_par.scroll((
+            vertical_offset,
+            horizontal_offset,
         ));
+
+        frame.render_widget(text_input_par, text_area);
+
+        if let Some(cursor_position) = cursor_position {
+            frame.set_cursor_position(cursor_position);
+        }
 
         {
             let output_clone = self.render_output.clone();
