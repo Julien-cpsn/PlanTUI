@@ -13,7 +13,7 @@ PlantUML editor and renderer in your terminal!
 
 ## How to use
 
-### From existing file
+### TUI from existing file
 
 ```shell
 plantui examples/bob_alice.pmu
@@ -27,16 +27,27 @@ Simply with not input file
 plantui
 ```
 
+### Render
+
+```shell
+plantui examples/bob_alice.pmu render ./my_output_folder 
+```
+
 ### Help
 
 ```shell
-Usage: plantui [OPTIONS] [INPUT]
+Usage: plantui [OPTIONS] [INPUT] [COMMAND]
+
+Commands:
+  render  Render the input to the output
+  help    Print this message or the help of the given subcommand(s)
 
 Arguments:
   [INPUT]  PlantUML file to edit
 
 Options:
   -l, --light-mode  Activate light mode instead of dark mode
+  -d, --dark-mode   Activate dark mode instead of light mode
   -h, --help        Print help
 ```
 
