@@ -22,4 +22,5 @@ directories = "6.0.0"
 anyhow = "1.0"
 once_cell = "1.21.3"
 image = { version = "0.25.6", features = ["png"] }
+strum = { version = "0.27.1", features = ["derive"] }
 arboard = { version = "3.5.0", features = ["wayland-data-control", "wl-clipboard-rs"] }

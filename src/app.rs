@@ -54,7 +54,7 @@ impl<'a> App<'a> {
         Ok(App {
             should_quit: false,
             data_dir,
-            dark_mode: !ARGS.light_mode,
+            dark_mode: !ARGS.light_mode || ARGS.dark_mode,
             left_area_percentage: 50,
             input_file_path,
             text_input: TextInput {

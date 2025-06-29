@@ -6,8 +6,10 @@ use plantuml_parser::PlantUmlFileData;
 use ratatui_image::picker::Picker;
 use std::env;
 use std::path::PathBuf;
+use std::process::Output;
 use std::sync::Arc;
 use std::time::Instant;
+use anyhow::anyhow;
 use once_cell::sync::Lazy;
 use tokio_util::sync::CancellationToken;
 
@@ -70,33 +72,18 @@ async fn render_plantuml_task(
         Some(_) => ("-tpng", "png")
     };
 
-    let mode = match dark_mode {
-        true => "-darkmode",
-        false => ""
-    };
-
-
+    let mode = dark_mode_to_plantuml_mode(dark_mode);
     
     let initial_time = Instant::now();
 
-    let render_command = Command::new(&*PLANTUML_COMMAND)
-        .args(vec![
-            output_format,
-            "-nbthread", "auto",
-            mode,
-            "-failfast2",
-            "-output", data_dir.as_os_str().to_str().unwrap(),
-            input_file_path.as_os_str().to_str().unwrap(),
-        ])
-        .output()
-        .await;
-
+    let render_command_output = render_command(output_format, mode, &data_dir, &input_file_path).await;
+    
     {
         let mut render_output = render_output_clone.write();
 
         render_output.time = initial_time.elapsed().as_millis().to_string();
 
-        match render_command {
+        match render_command_output {
             Ok(output) => {
                 if output.stderr.len() == 0 {
                     let output_path = data_dir
@@ -149,5 +136,29 @@ async fn render_plantuml_task(
         }
 
         render_output.pending = false;
+    }
+}
+
+pub async fn render_command(output_format: &str, mode: &str, output_dir_path: &PathBuf, input_file_path: &PathBuf) -> anyhow::Result<Output> {
+    match Command::new(&*PLANTUML_COMMAND)
+        .args(vec![
+            output_format,
+            "-nbthread", "auto",
+            mode,
+            "-failfast2",
+            "-output", output_dir_path.as_os_str().to_str().unwrap(),
+            input_file_path.as_os_str().to_str().unwrap(),
+        ])
+        .output()
+        .await {
+        Ok(output) => Ok(output),
+        Err(err) => Err(anyhow!(err))
+    }
+}
+
+pub fn dark_mode_to_plantuml_mode(dark_mode: bool) -> &'static str {
+    match dark_mode {
+        true => "-darkmode",
+        false => ""
     }
 }

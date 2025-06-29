@@ -4,9 +4,11 @@ use crate::args::ARGS;
 use std::fs::File;
 use std::io::Write;
 use std::path::PathBuf;
+use clap::ValueEnum;
 use plantuml_parser::{PlantUmlLine, PlantUmlLineKind};
 use ratatui::prelude::{Line, Stylize};
 use ratatui::widgets::Paragraph;
+use strum::Display;
 
 pub const DEFAULT_DIAGRAM: &str = r"@startuml
 title MyDiagram
@@ -88,4 +90,23 @@ fn syntax_highlighting<'a>(input: &str) -> Vec<Line<'a>> {
     }
     
     return lines;
+}
+
+#[derive(ValueEnum, Display, Default, Clone)]
+pub enum PlantUmlExtensions {
+    Eps,
+    Latex,
+    Pdf,
+    #[default]
+    Png,
+    Svg,
+    Vxd,
+    Txt,
+    Utxt
+}
+
+impl PlantUmlExtensions {
+    pub fn to_output_format(&self) -> String {
+        format!("-t{}", self.to_string().to_lowercase())
+    }
 }
