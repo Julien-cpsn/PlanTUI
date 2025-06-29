@@ -47,12 +47,12 @@ impl App<'_> {
             vertical_offset,
             horizontal_offset,
         ));
-
-        frame.render_widget(text_input_par, text_area);
-
+        
         if let Some(cursor_position) = cursor_position {
             frame.set_cursor_position(cursor_position);
         }
+        
+        frame.render_widget(text_input_par, text_area);
 
         {
             let output_clone = self.render_output.clone();

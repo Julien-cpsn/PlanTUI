@@ -1,7 +1,5 @@
-use std::ops::Rem;
-use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
-use ratatui::prelude::{Position, Widget};
+use ratatui::prelude::Position;
 use ratatui::widgets::Paragraph;
 
 pub struct TextInput<'a> {
@@ -10,11 +8,6 @@ pub struct TextInput<'a> {
     pub cursor_position: (u16, u16),
     pub render_fn: Box<dyn Fn(&str) -> Paragraph<'a> + 'a>
 }
-
-#[allow(unused)]
-const ELLIPSIS_LEFT: &str = "<";
-#[allow(unused)]
-const ELLIPSIS_RIGHT: &str = ">";
 
 impl TextInput<'_> {
     pub fn move_cursor_up(&mut self) {
@@ -164,15 +157,17 @@ impl TextInput<'_> {
             // Don't scroll past the end of the text
             let max_offset = total_lines.saturating_sub(viewport_height);
             desired_offset.min(max_offset)
-        } else {
+        }
+        else {
             0
         };
 
         // Calculate horizontal offset to center cursor
         let half_width = viewport_width / 2;
-        let horizontal_offset = if cursor_x >= half_width {
+        let horizontal_offset = if cursor_x > half_width + 1 {
             cursor_x - half_width
-        } else {
+        }
+        else {
             0
         };
 
@@ -196,10 +191,12 @@ impl TextInput<'_> {
             // Ensure cursor is within text area bounds
             if absolute_x < area.x + area.width && absolute_y < area.y + area.height {
                 Some(Position::new(absolute_x, absolute_y))
-            } else {
+            }
+            else {
                 None
             }
-        } else {
+        }
+        else {
             None
         }
     }
@@ -214,17 +211,5 @@ impl TextInput<'_> {
     pub fn reset_input(&mut self) {
         self.text.clear();
         self.reset_cursor();
-    }
-}
-
-impl Widget for TextInput<'_> {
-    fn render(self, area: Rect, buf: &mut Buffer) where Self: Sized {
-        let mut par = (self.render_fn)(&self.text);
-        par = par.scroll((
-            (self.cursor_position.0 as u16).rem(area.height),
-            (self.cursor_position.1 as u16).rem(area.width),
-        ));
-        
-        par.render(area, buf);
     }
 }
