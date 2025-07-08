@@ -78,7 +78,21 @@ fn syntax_highlighting<'a>(input: &str) -> Vec<Line<'a>> {
                 PlantUmlLineKind::Header(_) => Line::raw(plantuml_line.raw_str().to_string()).magenta(),
                 PlantUmlLineKind::Footer(_) => Line::raw(plantuml_line.raw_str().to_string()).magenta(),
                 PlantUmlLineKind::Empty => Line::raw(text_line.to_string()).gray(),
-                PlantUmlLineKind::Others => Line::raw(text_line.to_string())
+                PlantUmlLineKind::Others => {
+                    let mut highlighted_line = Line::raw(text_line.to_string());
+
+                    if line.starts_with("!define ") {
+                        highlighted_line = highlighted_line.yellow();
+                    }
+                    else if line.starts_with("legend ") || line.starts_with("end legend") {
+                        highlighted_line = highlighted_line.light_magenta();
+                    }
+                    else if line.starts_with("skinparam") {
+                        highlighted_line = highlighted_line.green();
+                    }
+
+                    highlighted_line
+                }
             };
 
             if in_comment_block {
